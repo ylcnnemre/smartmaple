@@ -1,0 +1,28 @@
+# Django-specific
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
+
+# Ignore the virtual environment folder
+venv/
+env/
+ENV/
+
+# Ignore macOS system files
+.DS_Store
+
+# Ignore the database file (assuming you are using SQLite)
+db.sqlite3
+
+# Ignore media and static files
+media/
+static/
+
+# Ignore sensitive data (config settings, secret keys, etc.)
+secrets.json
+
+# Ignore IDE or text editor specific files
+.idea/
+.vscode/
