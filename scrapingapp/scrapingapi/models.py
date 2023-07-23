@@ -33,7 +33,7 @@ class KitapSepeti(models.Model):
     size = models.CharField(max_length=20)
     book_cover = models.CharField(max_length=20)
     paper_type = models.CharField(max_length=20)
-    created = models.DateTimeField(default=timezone.now()+timezone.timedelta(hours=3))
+    created = models.DateTimeField(default=timezone.now()+timezone.timedelta(hours=3) )
     class Meta:
         db_table = 'kitapsepeti'
     def __str__(self):

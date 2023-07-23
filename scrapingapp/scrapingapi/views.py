@@ -10,9 +10,8 @@ from django.utils import timezone
 
 def getKitapSepeti(request):
     try:
-        result = kitapSepetiScraping(5)
+        result = kitapSepetiScraping(5)   
 
-        # Filter out None values from result list
         books_to_create = [KitapSepeti(**data) for data in result if data is not None]
 
         deleted_items = KitapSepeti.objects.filter(site="kitapsepeti")
@@ -21,13 +20,15 @@ def getKitapSepeti(request):
         KitapSepeti.objects.bulk_create(books_to_create)
 
         response_data = {
-            "message": "Toplu kaydetme işlemi başarılı.",
+            "element" : "kitapsepeti",
+            "message": "Kayıt işlemi başarılı",
             "books": result
         }
         return JsonResponse(response_data, safe=False)
 
     except Exception as e:
         response_data = {
+            "element" : "kitapsepeti",
             "message": f"Hata oluştu: {str(e)}",
             "books": []
         }
@@ -36,7 +37,7 @@ def getKitapSepeti(request):
 
 def getKitapYurdu(request):
     try:
-        result = kitapYurduScraping()
+        result = kitapYurduScraping(5)
         books_to_create = [KitapYurdu(**data) for data in result]
         deleted_items=KitapYurdu.objects.filter(site="kitapyurdu")
         deleted_items.delete()
@@ -44,6 +45,7 @@ def getKitapYurdu(request):
         KitapYurdu.objects.bulk_create(books_to_create)
 
         response_data = {
+            "element" : "kitapyurdu",
             "message": "Toplu kaydetme işlemi başarılı.",
             "books": result
         }
@@ -51,6 +53,7 @@ def getKitapYurdu(request):
     
     except Exception as e:
         response_data = {
+            "element"  : "kitapsepeti",
             "message": f"Hata oluştu: {str(e)}",
             "books": []
         }
@@ -74,4 +77,6 @@ def getAllBook(request):
 
 
 def test(request):
-    return HttpResponse("" )
+    val=timezone.now()+timezone.timedelta(hours=3) 
+
+    return HttpResponse(val)
