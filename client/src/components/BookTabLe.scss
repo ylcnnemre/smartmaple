@@ -1,0 +1,11 @@
+.kitap_sepeti {
+    background-color: #27A243;
+    border: none;
+    color: white;
+    transition: .5s all;
+    margin-right: 20px;
+    &:hover{
+        color: white !important;
+        opacity: .7;
+    }
+}

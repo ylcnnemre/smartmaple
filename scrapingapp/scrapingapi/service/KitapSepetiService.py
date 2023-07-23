@@ -5,7 +5,7 @@ from selenium.webdriver.support import expected_conditions as ec
 from decimal import Decimal
 
 
-def kitapSepetiScraping(limit=20):
+def kitapSepetiScraping(limit=None):
     driver=webdriver.Firefox()
     driver.get("https://www.kitapsepeti.com/cok-satan-kitaplar")
     wait = WebDriverWait(driver, 10)
@@ -21,9 +21,16 @@ def kitapSepetiScraping(limit=20):
          product_links.append(alink.get_attribute("href") )
         
     for index,element in enumerate(product_links):
-         if index < limit :
+        if limit == None:
             response= openLink(element,driver)
-            resultProduct.append(response)
+            if response != None:
+                 resultProduct.append(response)
+        else :
+             if index < limit:
+                  response= openLink(element,driver)
+                  if response != None:
+                       resultProduct.append(response)
+            
     driver.quit()
     return resultProduct
 
@@ -47,12 +54,11 @@ def openLink(link,driver):
             result["writer"]=writer
             result["price"]= Decimal(price.replace(",", "."))
             result["site"]="kitapsepeti"
-
             aboutContainer=detail_div.find_element(By.CLASS_NAME,"centerBlock")
             abouts= aboutContainer.find_element(By.CLASS_NAME,"cilt")
             driver.implicitly_wait(2)
             aboutList=abouts.find_elements(By.TAG_NAME,"div")
-            
+  
             for index,item in enumerate(aboutList):
                 value=""
                 if index !=6:

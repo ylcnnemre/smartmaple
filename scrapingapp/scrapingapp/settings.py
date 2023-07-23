@@ -38,8 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'scrapingapi',
-    'django_cron',
+    'corsheaders'
 ]
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -49,11 +51,14 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+
 ]
 
-CRON_CLASSES = [
-    'myapp.cron.MyScheduledTask',  # Oluşturduğunuz görevin adını buraya ekleyin
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",  # React uygulamanızın adresi
 ]
+
 
 ROOT_URLCONF = 'scrapingapp.urls'
 

@@ -4,33 +4,39 @@ from .service.KitapSepetiService import kitapSepetiScraping
 from .service.KitapYurduService import kitapYurduScraping
 from .models import KitapYurdu,KitapSepeti
 from decimal import Decimal
-
+from datetime import datetime
+from django.utils import timezone
 # Create your views here.
 
 def getKitapSepeti(request):
     try:
-        result = kitapSepetiScraping(3)
-        books_to_create = [KitapSepeti(**data) for data in result]
-        deleted_items=KitapSepeti.objects.filter(site="kitapsepeti")
+        result = kitapSepetiScraping(5)
+
+        # Filter out None values from result list
+        books_to_create = [KitapSepeti(**data) for data in result if data is not None]
+
+        deleted_items = KitapSepeti.objects.filter(site="kitapsepeti")
         deleted_items.delete()
+
         KitapSepeti.objects.bulk_create(books_to_create)
 
         response_data = {
             "message": "Toplu kaydetme işlemi başarılı.",
             "books": result
         }
-        return JsonResponse(response_data,safe=False)
-    
+        return JsonResponse(response_data, safe=False)
+
     except Exception as e:
         response_data = {
             "message": f"Hata oluştu: {str(e)}",
             "books": []
         }
-        return JsonResponse(response_data, status=500,safe=False)
+        return JsonResponse(response_data, status=500, safe=False)
+
 
 def getKitapYurdu(request):
     try:
-        result = kitapYurduScraping(3)
+        result = kitapYurduScraping()
         books_to_create = [KitapYurdu(**data) for data in result]
         deleted_items=KitapYurdu.objects.filter(site="kitapyurdu")
         deleted_items.delete()
@@ -58,13 +64,14 @@ def getAllBook(request):
     kitapsepeti_list=list(kitapSepeti.values())
     for book in kitapyurdu_list:
         book['price'] = Decimal(str(book['price']))
-        book['_id'] = str(book['_id'])
     for item in kitapsepeti_list:
         item["price"] = Decimal(str(item["price"]))
-        item["_id"]=str(item["_id"])
     kitapyurdu_list.extend(kitapsepeti_list)
-    return JsonResponse(kitapyurdu_list, safe=False)
+
+    result = sorted(kitapyurdu_list, key=lambda x: x['created'],reverse=True)
+
+    return JsonResponse(result, safe=False)
 
 
 def test(request):
-    return HttpResponse("merhaba123")
+    return HttpResponse("" )

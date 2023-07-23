@@ -3,10 +3,10 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from decimal import Decimal
+from datetime import datetime
 
 
-
-def kitapYurduScraping(limit=20):
+def kitapYurduScraping(limit=None):
     driver = webdriver.Firefox()
     driver.get("https://www.kitapyurdu.com/index.php?route=product/best_sellers&list_id=5&filter_in_stock=1")
     selected_element = driver.find_element(By.CLASS_NAME, "product-grid")
@@ -21,11 +21,15 @@ def kitapYurduScraping(limit=20):
     result_list=[]
 
     for index,item in enumerate(hrefList):
-        if(index < limit):
+        if limit == None:
             response=openLink(item,driver)
             if response != None:
                 result_list.append(response)
-    
+        else: 
+            if index < limit:
+                response=openLink(item,driver)
+                if response != None:
+                    result_list.append(response)
     driver.quit()
     return result_list 
 
@@ -44,11 +48,11 @@ def openLink(link,driver):
             print("book ==>",bookName)
 
             result["name"]=bookName
-            result["publisher"]=writer
-            result["writer"]=publisher
+            result["publisher"]=publisher
+            result["writer"]=writer
             result["price"]= Decimal(price.replace(",", "."))
             result["site"]="kitapyurdu"
-
+            
             features=pr_details_div.find_element(By.CLASS_NAME ,"pr_attributes")
             tbody=features.find_element(By.TAG_NAME,"tbody")
             rows= tbody.find_elements(By.TAG_NAME,"tr")
