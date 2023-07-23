@@ -130,7 +130,6 @@ const BooktTable = () => {
   };
 
   const lastUpdate = useMemo(() => {
-    console.log("data ==>",data)
     if (data.length != 0) {
       const items = data[0]?.created.split(".")[0].split("T");
       return items[0] + " -  " + items[1];

@@ -45,8 +45,6 @@ def openLink(link,driver):
             publisher=pr_details_div.find_element(By.CLASS_NAME,"pr_producers__publisher").text
             price=pr_details_div.find_element(By.CLASS_NAME,"price__item").text
             
-            print("book ==>",bookName)
-
             result["name"]=bookName
             result["publisher"]=publisher
             result["writer"]=writer
